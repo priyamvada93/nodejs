@@ -30,9 +30,10 @@
 			var pass = $('#password').val();
 
 			$.ajax({
-    				url: "http://localhost:3000/users/LoginUser?email="+email+"&pass="+pass,
+    				url: "http://localhost:3000/users/LoginUser",
    			        type: "POST",
-    				datatype: "json",
+    				data: JSON.stringify({"email":email,"pass":pass}),
+ 				datatype: "json",
     				contentType: "application/json; charset=utf-8",
     				success: function (result) {
        				 console.log(result);

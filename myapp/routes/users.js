@@ -45,7 +45,7 @@ router.get('/ListUser', function(req, res, next){
 router.post('/LoginUser', function(req, res, next) {
 
 	var user_email = req.body.email;
-	var user_password = req.body.password;
+	var user_password = req.body.pass;
 console.log('select * from RegisterUser where email ='+ "'" +user_email+ "'" + 'and password=' + "'"+user_password+"'");
 	 connection.query('select * from RegisterUser where email ='+ "'" +user_email+ "'" + 'and password=' + "'"+user_password+"'" , function(err, rows, fields){
                 if(err){
