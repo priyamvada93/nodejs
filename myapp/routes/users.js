@@ -44,9 +44,9 @@ router.get('/ListUser', function(req, res, next){
 
 router.post('/LoginUser', function(req, res, next) {
 
-console.log(req.body);
 	var user_email = req.body.email;
 	var user_password = req.body.password;
+console.log('select * from RegisterUser where email ='+ "'" +user_email+ "'" + 'and password=' + "'"+user_password+"'");
 	 connection.query('select * from RegisterUser where email ='+ "'" +user_email+ "'" + 'and password=' + "'"+user_password+"'" , function(err, rows, fields){
                 if(err){
                 console.log(err);
@@ -99,7 +99,8 @@ router.post('/RegisterUser', function(req, res, next) {
 		})
 	}
 			else{
-			console.log("Account already exists. Please login.");
+				res.send("Account already exists. Please login.");	
+				console.log("Account already exists. Please login.");
 			}
 	}	
 });
@@ -148,10 +149,4 @@ router.post('/UpdateUser', function(req, res, next){
               }
       
 });
-
-			
-	
-       
-
-
 module.exports = router;
