@@ -9,6 +9,9 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var displayRouter = require('./routes/display');
 
+
+
+
 var app = express();
 //app.set('port', process.env.PORT || 8080);
 
