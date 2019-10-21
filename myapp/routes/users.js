@@ -3,6 +3,7 @@ var mysql = require('mysql');
 var express = require('express');
 var parser =  require('body-parser');
 var _ = require('lodash');
+var multer  =   require('multer');
 
 
 
@@ -19,9 +20,9 @@ router.use(parser.json());
 
 
 /* GET users listing. */
-router.get('/ListUser', function(req, res, next){
+router.post('/ListUser', function(req, res, next){
 	
-	var user_id = req.query.id;
+	var user_id = req.body.id;
 	console.log('select * from RegisterUser where id ='+ "'" +user_id+"'");
 	connection.query('select * from RegisterUser where id ='+ "'" +user_id+ "'", function(err, rows, fields){
                 if(err){
@@ -33,7 +34,8 @@ router.get('/ListUser', function(req, res, next){
                                 
                         }
                         else{
-                                console.log(JSON.stringify(rows));
+                                console.log(rows);
+				res.send(rows);
                                 
                         }
                 }
@@ -57,7 +59,8 @@ console.log('select * from RegisterUser where email ='+ "'" +user_email+ "'" + '
 				res.send("false");
 			}
 			else{
-				console.log("Successfully logged in!!!");
+				console.log("----Successfully logged in!!!----");
+				//console.log(rows);
 				res.send(rows);
 			}
 		}
@@ -69,16 +72,16 @@ console.log('select * from RegisterUser where email ='+ "'" +user_email+ "'" + '
 
 router.post('/RegisterUser', function(req, res, next) {
 
+	console.log("----",req.body,"-----");
+	var user_id = req.body.id;
 	var user_email=req.body.email;
         var user_password=req.body.pwd;
 	var user_name = req.body.name;
 	var user_surname = req.body.srname;
 	var user_mobile = req.body.mob;
+//	var image = req.body.image;
 
-//console.log('INSERT into RegisterUser (email,password,name,surname,mobile) values("'+user_email+'", "'+user_password+'", "'+user_name+'", "'+user_surname+'", "'+user_mobile+'")' + 'where email =' + "'"+user_email+"'");
 
-
-		console.log('select * from RegisterUser where email ='+ "'"+user_email+"'" + 'and password='+ "'"+user_password+"'");
 		 connection.query('select * from RegisterUser where email ='+ "'" +user_email+ "'" , function(err, rows, fields){
                 if(err){
                 console.log(err);
@@ -107,20 +110,47 @@ router.post('/RegisterUser', function(req, res, next) {
 	
 });		
                 	
+var storage =   multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, './uploads');
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + '-' + Date.now());
+  }
+});
+
+var upload = multer({ storage : storage}).single('myFile');
+
+router.get('/',function(req,res){
+      res.sendFile(__dirname + "/index.html");
+});
+
+
 
 router.post('/UpdateUser', function(req, res, next){
-		
+
+	upload(req,res,function(err) {
+	console.log(err);
+        if(err) {
+            return res.end("Error uploading file.");
+        }
+        	res.end("File is uploaded");
+    	});	
+/*
+	console.log(req.body);	
         var user_id = req.body.id;
 	var user_email=req.body.email;
-        var user_password=req.body.password;
+        var user_password=req.body.pwd;
         var user_name = req.body.name;
-        var user_surname = req.body.surname;
-        var user_mobile = req.body.mobile;
+        var user_surname = req.body.srname;
+        var user_mobile = req.body.mob;
+//	var image = req.body.image;
+
 
 		console.log('UPDATE RegisterUser SET email='+ "'"+user_email+"'" +',password='+ "'"+user_password+"'" +',name='+ "'"+user_name+"'" +',surname='+ "'"+user_surname+"'" + ',mobile=' +"'"+user_mobile+"'" +" where id ='" + "'"+user_id +"'" );
                 
 	if(_.isNil(user_id)){
-	connection.query('INSERT into RegisterUser (email,password,name,surname,mobile) values("'+user_email+'", "'+user_password+'", "'+user_name+'", "'+user_surname+'", "'+user_mobile+'" )' , function(error,rows,columns){
+	connection.query('INSERT into RegisterUser (email,password,name,surname,mobile,image) values("'+user_email+'", "'+user_password+'", "'+user_name+'", "'+user_surname+'", "'+user_mobile+'" )' , function(error,rows,columns){
 
                 if(error){
                 	console.log(error);
@@ -147,6 +177,6 @@ router.post('/UpdateUser', function(req, res, next){
                
 		
               }
-      
+   */   
 });
 module.exports = router;
