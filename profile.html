@@ -1,0 +1,53 @@
+<html>
+<head>
+  <script src ="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+</head>
+<body>
+        <h1>Welcome, <span id ='name'></span></h1>
+	<button onclick="window.location.href='http://localhost/nodejs/registrationUser.html'">Update</button>
+	<input type = "button" onclick = "logout()" value = "logout"/>	
+</body>
+
+<script>
+	//alert($.cookie('user_id'));
+	function logout(){
+		$.removeCookie("user_id");
+		$.removeCookie("logged");
+		 window.location.replace("http://localhost/nodejs/login.html");
+	}
+
+	id = $.cookie('user_id');
+	alert(id);
+
+		$.ajax({
+                                url: "http://localhost:3000/users/ListUser",
+                                type: "POST",
+                                data: JSON.stringify({"id":id}),
+                                datatype: "json",
+                                contentType: "application/json; charset=utf-8",
+                                success: function (result) {
+                                        alert(result);
+                                        if(result != 'false'){
+                                                //alert('bb');
+                                               // alert(result[0].id); 
+                                                alert(result[0].name);
+						user_name = result[0].name;
+						//console.log(user_name);
+						$("#name").text(user_name)	
+                                             }
+                                        else{
+                                               // alert('aa');  
+                                                console.log("Please login");
+                                                window.location.replace("http://localhost/nodejs/login.html");
+                                                //give some error message       
+                                        }
+                                },
+                        });
+        
+                   
+</script>
+
+
+</html>

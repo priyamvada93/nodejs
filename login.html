@@ -3,6 +3,7 @@
 
 	<head>
 	<script src ="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 	</head>
 
 	<body>
@@ -36,11 +37,27 @@
  				datatype: "json",
     				contentType: "application/json; charset=utf-8",
     				success: function (result) {
-       				 console.log(result);
-        
+					//alert(result);
+					if(result != 'false'){
+						//alert('bb');
+						var id = result[0].id; 
+        					console.log(result[0].id);
+						$.cookie('user_id',id );
+						$.cookie('logged',1);
+						console.log("Please login");
+						window.location.replace("http://localhost/nodejs/profile.html");
+						//window.location.href = "http://www.w3schools.com"
+
+					}
+					else{
+						//alert('aa');	
+						console.log("Please login");
+						window.location.replace("http://localhost/nodejs/login.html");
+						//give some error message	
+					}
         			},
-    			})
-			
+    			});
+	
 		}		
 
 	</script>

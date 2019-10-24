@@ -79,6 +79,7 @@ router.post('/RegisterUser', function(req, res, next) {
 	var user_name = req.body.name;
 	var user_surname = req.body.srname;
 	var user_mobile = req.body.mob;
+var filename = req.body.fileName;
 //	var image = req.body.image;
 
 
@@ -90,7 +91,7 @@ router.post('/RegisterUser', function(req, res, next) {
 			if(rows.length==0){
 
                 	
-			connection.query('INSERT into RegisterUser (email,password,name,surname,mobile) values("'+user_email+'", "'+user_password+'", "'+user_name+'", "'+user_surname+'", "'+user_mobile+'")', function(error,rows,columns){
+			connection.query('INSERT into RegisterUser (email,password,name,surname,mobile,image) values("'+user_email+'", "'+user_password+'", "'+user_name+'", "'+user_surname+'", "'+user_mobile+'", "'+filename+'")', function(error,rows,columns){
 			if(!error){
 			console.log("Record inserted.");
 			res.send("record inserted!!!");

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src ="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+</head>
+
+<body>
+	<form name = "registration">
+	<label>Email</label>
+			<input type = "text" name = "email" id = "email"/>
+			<div id = "email_err" class = "error"></div>
+	<br/>
+	<br/>		
+			<label>Password</label>
+			<input type = "password" name = "pwd"  id = "pwd"/>
+			<div id = "pwd_err" class = "error"></div>
+	<br/>
+	<br/>		
+			
+			<label>Name</label>
+			<input type = "text" name = "name"  id = "name"/>
+			<div id = "name_err" class = "error"></div>
+	<br/>
+	<br/>		
+	
+			<label>Surname</label>
+			<input type = "text" name = "srname"  id = "srname"/>
+			<div id = "srname_err" class = "error"></div>
+	<br/>
+	<br/>		
+			<label>Mobile</label>
+			<input type = "text" name = "mob"  id = "mob"/>
+			<div id = "mob_err" class = "error"></div>
+	<br/>
+	<br/>		
+			<input type = "file" id ="img"/>
+	<br/>		
+			<input type = "hidden" id ="filename" name ="filename"/>
+			<input type = "button" onclick = "updateRegister()" value = "Update"/>
+
+
+	</form>
+</body>
+
+<script>
+		/*
+			this code is used to prefill data in case user is logged in
+		*/
+		id = $.cookie('user_id');
+		if(id){
+			$(document).ready(function(){
+				$.ajax({
+                                url: "http://localhost:3000/users/ListUser",
+                                type: "POST",
+                                data: JSON.stringify({"id":id}),
+                                datatype: "json",
+                                contentType: "application/json; charset=utf-8",
+                                success: function (result) {
+                                        console.log(result);
+                                        if(result != 'false'){
+                                                //alert('bb');
+                                               // alert(result[0].id); 
+                                                //alert(result[0].name);
+						user_email = result[0].email;
+						user_password = result[0].password;
+						user_name = result[0].name;
+						user_surname = result[0].surname;
+						user_mobile = result[0].mobile;
+                                                //alert(user_email);
+                                                //alert(user_password);
+                                               // alert(user_name);
+                                               // alert(user_surname);
+                                               // alert(user_mobile);
+                                                $("#name").val(user_name)      
+                                                $("#email").val(user_email);      
+                                                $("#pwd").val(user_password);      
+                                                $("#srname").val(user_surname);      
+                                                $("#mob").val(user_mobile); 
+						     
+                                             }
+                                        else{
+                                               // alert('aa');  
+                                                console.log("Please login");
+                                                window.location.replace("http://localhost/nodejs/login.html");
+                                                //give some error message       
+                                        }
+                                },
+                        });			
+
+})
+}
+
+
+	/*
+		gets called when user clicks on submit form
+	*/	
+	function updateRegister(){
+		console.log("heloooooo");	
+		if (typeof $.cookie('user_id') === 'undefined'){
+			var url = "http://localhost:3000/users/RegisterUser";
+			
+		}
+		else{
+			var url = "http://localhost:3000/users/UpdateUser";
+		}
+
+		 			var name =	$("#name").val()      
+                                        var email =     $("#email").val();      
+                                        var pass =      $("#pwd").val();      
+                                        var srname=     $("#srname").val();      
+                                        var mob =       $("#mob").val();
+					var fileName =  $("#filename").val();				
+			
+		var formData = new FormData(this);	
+
+	 	$.ajax({
+                                url: url,
+                                type: "POST",
+                                data: JSON.stringify({"id":id,"email":email,"pwd":pass,"name":name,"srname":srname,"mob":mob,"fileName":fileName}),
+				datatype: "json",
+                                contentType: "application/json; charset=utf-8",
+                                success: function (result) {
+                                        	console.log(result);
+                                        	if(result != 'false'){
+							console.log("changes made successfully");
+                                        	}
+						else{
+                                               	// alert('aa');  
+                                                	console.log("Please login");
+                                                	window.location.replace("http://localhost/nodejs/login.html");
+                                               	 	//give some error message       
+                                        	}
+				}
+
+});
+}
+
+/*
+	uploads the file on server
+*/
+const sendFile = file => {
+console.log(file);
+
+var ts = new Date().getTime();
+file.name = ts; 
+$('#filename').val('myFile-'+ts) ;
+
+ 
+if (typeof $.cookie('user_id') === 'undefined'){
+	var url = "http://localhost:3000/users/UpdateUser";
+  }
+  else{
+	var url = "http://localhost:3000/users/UpdateUser";
+  }
+  const fd = new FormData()
+  const uri = url;
+  const xhr = new XMLHttpRequest()
+
+  xhr.open('POST', uri, true)
+  xhr.onreadystatechange = () => {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      const imageName = xhr.responseText
+      alert(imageName);
+      //do what you want with the image name returned
+      //e.g update the interface
+    }
+  }
+  fd.append('myFile',file);
+  xhr.send(fd)
+}
+
+const handleImageUpload = event => {
+  const files = event.target.files
+//console.log(files);
+//console.log(files[0].name);
+  sendFile(files[0])
+}
+
+$("#img").on('change', event => {
+  handleImageUpload(event)
+})
+
+
+
+
+</script>
+</html>
