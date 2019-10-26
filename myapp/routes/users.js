@@ -116,7 +116,7 @@ var storage =   multer.diskStorage({
     callback(null, './uploads');
   },
   filename: function (req, file, callback) {
-    callback(null, file.fieldname + '-' + Date.now());
+    callback(null, file.originalname);
   }
 });
 
@@ -129,7 +129,7 @@ router.get('/',function(req,res){
 
 
 router.post('/UpdateUser', function(req, res, next){
-
+	console.log("-----",req.body,"-----");
 	upload(req,res,function(err) {
 	console.log(err);
         if(err) {
