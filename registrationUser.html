@@ -140,11 +140,10 @@
 	uploads the file on server
 */
 const sendFile = file => {
-console.log(file);
 
 var ts = new Date().getTime();
 file.name = ts; 
-$('#filename').val('myFile-'+ts) ;
+$('#filename').val('profilepic-' +ts) ;
 
  
 if (typeof $.cookie('user_id') === 'undefined'){
@@ -166,7 +165,7 @@ if (typeof $.cookie('user_id') === 'undefined'){
       //e.g update the interface
     }
   }
-  fd.append('myFile',file);
+  fd.append('myFile',file,$('#filename').val());
   xhr.send(fd)
 }
 
